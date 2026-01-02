@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>테마 전환 예제</title>
+
+    <style>
+        /* 기본(화이트) 테마 변수 */
+        .app {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --title-color: #3b6eea;
+            --border-color: #cccccc;
+            --outer-bg: #f3f4f6;
+            /* 바깥 배경(전체 화면) */
+        }
+
+        /* ✅ 다크 테마: app 안에 #dark가 체크되면 변수 덮어쓰기 */
+        .app:has(#dark:checked) {
+            --bg-color: #1e1e1e;
+            --text-color: #f0f0f0;
+            --title-color: #8fd3ff;
+            --border-color: #444444;
+            --outer-bg: #0f172a;
+            /* 전체 배경도 어둡게 */
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* 전체 화면 배경까지 함께 전환 */
+        .app {
+            min-height: 100vh;
+            background: var(--outer-bg);
+            padding: 40px;
+            transition: background 0.3s;
+        }
+
+        /* 라디오 영역 */
+        .theme-select {
+            width: 600px;
+            margin: 0 auto 16px;
+            font-size: 14px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .theme-select label {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        /* 페이지 박스 */
+        .page {
+            width: 600px;
+            margin: 0 auto;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            color: var(--title-color);
+        }
+
+        p {
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- ✅ 라디오 “한 세트”만 사용 -->
+        <div class="theme-select">
+            <label>
+                <input type="radio" name="theme" id="light" checked />
+                화이트 테마
+            </label>
+
+            <label>
+                <input type="radio" name="theme" id="dark" />
+                다크 테마
+            </label>
+        </div>
+
+        <div class="page">
+            <h1>테마 전환 예제</h1>
+            <p>
+                라디오 버튼을 클릭하면<br />
+                전체 배경 + 카드까지 테마가 전환됩니다.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

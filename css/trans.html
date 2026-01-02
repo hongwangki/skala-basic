@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Transform and Transition Example</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: #ffffff;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* 전체 레이아웃 */
+        .wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .example {
+            text-align: center;
+        }
+
+        /* 🔹 상단 박스 */
+        .box {
+            width: 140px;
+            height: 140px;
+            background: #76b05f;
+            /* 기본: 녹색 */
+            border-radius: 20px;
+            /* 라운드 처리 */
+            color: #fff;
+            font-weight: bold;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 20px;
+
+            /* 전환 효과 */
+            transition: background-color 0.4s ease,
+                transform 0.4s ease;
+        }
+
+        /* 🔹 hover 시 배경색 변경 */
+        .box:hover {
+            background: #f2c94c;
+            /* 노란색 */
+        }
+
+        /* 🔹 버튼 */
+        .btn {
+            padding: 8px 18px;
+            background: #4f6ef7;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* 🔹 버튼 클릭 시 박스 회전 */
+        .rotated {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Transform and Transition Example</h2>
+
+    <div class="wrapper">
+        <div class="example">
+            <!-- 상단 박스 -->
+            <div class="box" id="box">
+                Hover me!
+            </div>
+
+            <!-- 하단 버튼 -->
+            <button class="btn" onclick="rotateBox()">
+                Click Me!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function rotateBox() {
+            document.getElementById("box")
+                .classList.toggle("rotated");
+        }
+    </script>
+
+</body>
+
+</html>

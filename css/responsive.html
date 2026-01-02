@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid 레이아웃 반응형 웹</title>
+
+    <style>
+        :root {
+            --dark: #2f2f2f;
+            --mid: #e6e6e6;
+            --light: #f4f4f4;
+            --gap: 14px;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: #eef1f6;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* 전체 프레임(브라우저 화면처럼) */
+        .frame {
+            width: min(520px, 92vw);
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #c9c9c9;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+
+        /* ✅ Grid 레이아웃 */
+        .layout {
+            display: grid;
+            gap: var(--gap);
+
+            /* 모바일 기본: 세로 스택 */
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "header"
+                "main"
+                "aside"
+                "footer";
+        }
+
+        header {
+            grid-area: header;
+        }
+
+        main {
+            grid-area: main;
+        }
+
+        aside {
+            grid-area: aside;
+        }
+
+        footer {
+            grid-area: footer;
+        }
+
+        /* 박스 스타일 */
+        .box {
+            border-radius: 2px;
+            padding: 14px;
+            box-sizing: border-box;
+            font-weight: 700;
+        }
+
+        header.box,
+        footer.box {
+            background: var(--dark);
+            color: #fff;
+            text-align: center;
+        }
+
+        main.box {
+            background: var(--light);
+            color: #333;
+        }
+
+        aside.box {
+            background: var(--mid);
+            color: #333;
+        }
+
+        /* ✅ 화면이 넓어지면(태블릿 이상): main + aside 가로 배치 */
+        @media (min-width: 768px) {
+            .frame {
+                width: min(760px, 92vw);
+            }
+
+            .layout {
+                grid-template-columns: 1fr 220px;
+                /* 메인(가변) + 사이드(고정) */
+                grid-template-areas:
+                    "header header"
+                    "main   aside"
+                    "footer footer";
+                align-items: start;
+            }
+
+            main.box,
+            aside.box {
+                min-height: 70px;
+                /* 스샷처럼 얇게 보이게 */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="frame">
+        <div class="layout">
+            <header class="box">헤더</header>
+            <main class="box">메인 콘텐츠</main>
+            <aside class="box">사이드바</aside>
+            <footer class="box">푸터</footer>
+        </div>
+    </div>
+</body>
+
+</html>

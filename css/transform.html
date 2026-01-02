@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transform 5종 예제</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: #f6f7fb;
+            padding: 28px;
+        }
+
+        .wrap {
+            width: min(900px, 95vw);
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #c9d2ea;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            height: 40px;
+            border: 1px solid #9aa7c7;
+            background: #f3f6ff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button:hover {
+            filter: brightness(0.98);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .stage {
+            height: 320px;
+            border: 1px dashed #b3c0ea;
+            border-radius: 12px;
+            background: #fbfcff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            /* 3D transform 보이게 */
+            perspective: 900px;
+        }
+
+        .box {
+            width: 140px;
+            height: 140px;
+            border-radius: 18px;
+            background: #2f4f86;
+            color: #fff;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: .3px;
+
+            transition: transform 450ms ease;
+            transform: none;
+            user-select: none;
+        }
+
+        .hint {
+            margin-top: 12px;
+            color: #4b5563;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ✅ transform 5종 */
+        .t-translate {
+            transform: translateX(120px) translateY(-25px);
+        }
+
+        .t-rotate {
+            transform: rotate(25deg);
+        }
+
+        .t-scale {
+            transform: scale(1.35);
+        }
+
+        .t-skew {
+            transform: skewX(18deg) skewY(-10deg);
+        }
+
+        .t-3d {
+            transform: rotateY(40deg) translateZ(60px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="controls">
+            <button data-t="t-translate">1) translate</button>
+            <button data-t="t-rotate">2) rotate</button>
+            <button data-t="t-scale">3) scale</button>
+            <button data-t="t-skew">4) skew</button>
+            <button data-t="t-3d">5) 3D</button>
+        </div>
+
+        <div class="stage">
+            <div class="box" id="box">BOX</div>
+        </div>
+
+        <div class="hint">
+            버튼을 누르면 박스에 <b>transform</b> 5가지가 적용돼. <br />
+            다시 원래대로 돌리고 싶으면, 같은 버튼을 한 번 더 누르거나(토글),
+            아래 스크립트에서 <code>reset</code> 버튼도 추가할 수 있어.
+        </div>
+    </div>
+
+    <script>
+        const box = document.getElementById("box");
+        const buttons = document.querySelectorAll("button[data-t]");
+
+        let current = ""; // 현재 적용된 클래스
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const cls = btn.dataset.t;
+
+                // 기존 클래스 제거
+                if (current) box.classList.remove(current);
+
+                // 같은 버튼을 다시 누르면 리셋(토글)
+                if (current === cls) {
+                    current = "";
+                    return;
+                }
+
+                // 새 변환 적용
+                box.classList.add(cls);
+                current = cls;
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid + Flexbox Layout</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5f6f8;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* 🔷 브라우저 화면처럼 보이는 외부 프레임 */
+        .browser-frame {
+            width: 900px;
+            height: 520px;
+            margin: 40px auto;
+            border: 1px solid #666;
+            background: #fff;
+            box-sizing: border-box;
+            padding: 24px;
+        }
+
+        /* 실제 콘텐츠 영역 */
+        .page {
+            width: 100%;
+        }
+
+        /* 🔹 검색 UI (Grid 사용) */
+        .search-bar {
+            display: grid;
+            grid-template-columns: 1fr 80px;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            height: 32px;
+            padding: 6px 10px;
+            border: 1px solid #999;
+            font-size: 14px;
+        }
+
+        /* 🔹 버튼 (Flex로 중앙 정렬) */
+        .search-btn {
+            height: 32px;
+            border: 1px solid #999;
+            background: #f1f1f1;
+            cursor: pointer;
+            font-size: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 🔹 목록 박스 */
+        .list-box {
+            border: 1px solid #999;
+            padding: 16px;
+            min-height: 180px;
+        }
+
+        .list-title {
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #999;
+            margin-bottom: 12px;
+        }
+
+        /* 🔹 목록 아이템 (Flex) */
+        .list-item {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 6px;
+            font-size: 14px;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🔷 외부 프레임 -->
+    <div class="browser-frame">
+        <div class="page">
+
+            <!-- 검색 UI -->
+            <div class="search-bar">
+                <input class="search-input" type="text" placeholder="키워드 입력" />
+                <button class="search-btn">검색</button>
+            </div>
+
+            <!-- 목록 영역 -->
+            <div class="list-box">
+                <div class="list-title">목록형 데이터 영역</div>
+                <hr class="divider" />
+
+                <div class="list-item">데이터 항목 1</div>
+                <div class="list-item">데이터 항목 2</div>
+                <div class="list-item">데이터 항목 3</div>
+                <div class="list-item">데이터 항목 4</div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

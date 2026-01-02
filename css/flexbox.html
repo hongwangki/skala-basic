@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Flexbox 중앙 정렬</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f6f7fb;
+        }
+
+        /* 🔹 정렬 기준이 되는 큰 영역 */
+        .wrapper {
+            width: 500px;
+            height: 400px;
+            /* ★ 핵심: 높이 명시 */
+            border: 2px solid #4a5fc1;
+            margin: 40px auto;
+
+            display: flex;
+            justify-content: center;
+            /* 가로 중앙 */
+            align-items: center;
+            /* 세로 중앙 */
+        }
+
+        /* 🔹 박스 3개를 감싸는 컨테이너 */
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 100px;
+            justify-content: space-between;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background: #3d4f84;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-weight: bold;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="container">
+            <div class="box">BOX 1</div>
+            <div class="box">BOX 2</div>
+            <div class="box">BOX 3</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
