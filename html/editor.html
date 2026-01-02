@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Simple Contenteditable Editor</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            margin: 24px;
+        }
+
+        .wrap {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .btn {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn[aria-pressed="true"] {
+            border-color: #333;
+            font-weight: 700;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .editor {
+            margin-top: 12px;
+            min-height: 180px;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        .editor:focus {
+            border-color: #333;
+        }
+
+        .row {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h2>Simple Web Editor (contenteditable)</h2>
+
+        <div class="toolbar" role="toolbar" aria-label="편집 도구">
+            <button class="btn" type="button" id="boldBtn" aria-pressed="false" title="굵게 (Ctrl+B)">
+                굵게
+            </button>
+            <button class="btn" type="button" id="italicBtn" aria-pressed="false" title="기울임 (Ctrl+I)">
+                기울임
+            </button>
+            <button class="btn" type="button" id="underlineBtn" aria-pressed="false" title="밑줄 (Ctrl+U)">
+                밑줄
+            </button>
+
+            <label class="btn" style="display:flex; align-items:center; gap:8px;">
+                글자색
+                <input type="color" id="colorPicker" value="#000000"
+                    style="border:none; background:transparent; padding:0; width:32px; height:24px; cursor:pointer;">
+            </label>
+
+            <span style="flex:1;"></span>
+
+            <button class="btn" type="button" id="saveBtn">저장(HTML 보기)</button>
+            <button class="btn" type="button" id="clearBtn">비우기</button>
+        </div>
+
+        <div id="editor" class="editor" contenteditable="true" spellcheck="false" aria-label="편집 영역">
+            여기에 글을 입력하고 드래그로 선택한 뒤 도구를 눌러보세요.
+        </div>
+        <div class="hint">팁: 일부 브라우저에서 단축키 Ctrl+B / Ctrl+I / Ctrl+U 도 동작합니다.</div>
+
+        <div class="row">
+            <strong>저장된 HTML:</strong>
+        </div>
+        <textarea id="output" readonly placeholder="저장 버튼을 누르면 여기에 HTML이 표시됩니다."></textarea>
+    </div>
+
+    <script>
+        const editor = document.getElementById("editor");
+        const output = document.getElementById("output");
+
+        const boldBtn = document.getElementById("boldBtn");
+        const italicBtn = document.getElementById("italicBtn");
+        const underlineBtn = document.getElementById("underlineBtn");
+        const colorPicker = document.getElementById("colorPicker");
+
+        const saveBtn = document.getElementById("saveBtn");
+        const clearBtn = document.getElementById("clearBtn");
+
+        // 편집 명령 실행 (contenteditable + execCommand)
+        // 참고: execCommand는 "deprecated"지만 아직 대부분 브라우저에서 간단 에디터 용도로 잘 동작합니다.
+        function exec(cmd, value = null) {
+            editor.focus();
+            document.execCommand(cmd, false, value);
+            syncPressedStates();
+        }
+
+        function syncPressedStates() {
+            // 현재 커서/선택 상태에 따라 버튼 pressed 상태 반영
+            try {
+                boldBtn.setAttribute("aria-pressed", String(document.queryCommandState("bold")));
+                italicBtn.setAttribute("aria-pressed", String(document.queryCommandState("italic")));
+                underlineBtn.setAttribute("aria-pressed", String(document.queryCommandState("underline")));
+            } catch {
+                // 일부 환경에서 queryCommandState 예외 가능 -> 무시
+            }
+        }
+
+        boldBtn.addEventListener("click", () => exec("bold"));
+        italicBtn.addEventListener("click", () => exec("italic"));
+        underlineBtn.addEventListener("click", () => exec("underline"));
+
+        colorPicker.addEventListener("input", (e) => {
+            // 선택 영역 글자색 변경
+            exec("foreColor", e.target.value);
+        });
+
+        saveBtn.addEventListener("click", () => {
+            // 현재 편집 영역의 HTML을 그대로 출력
+            output.value = editor.innerHTML.trim();
+        });
+
+        clearBtn.addEventListener("click", () => {
+            editor.innerHTML = "";
+            output.value = "";
+            editor.focus();
+            syncPressedStates();
+        });
+
+        // 커서 이동/선택 변경 시 pressed 상태 갱신
+        document.addEventListener("selectionchange", () => {
+            // selectionchange는 문서 전체에서 자주 발생하므로,
+            // editor 안에 포커스가 있을 때만 반영
+            const active = document.activeElement;
+            if (active === editor) syncPressedStates();
+        });
+
+        editor.addEventListener("keyup", syncPressedStates);
+        editor.addEventListener("mouseup", syncPressedStates);
+        editor.addEventListener("focus", syncPressedStates);
+
+        // 초기 상태 반영
+        syncPressedStates();
+    </script>
+</body>
+
+</html>

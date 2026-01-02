@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여러가지 입력 유형</title>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Noto Sans KR", sans-serif;
+        }
+
+        .password-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        .password-wrap input {
+            padding-right: 40px;
+        }
+
+        .toggle-eye {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <!-- 텍스트 입력 -->
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <!-- 이메일 입력 -->
+        <label for="email">이메일:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <!-- 비밀번호 입력 -->
+        <label for="password">비밀번호:</label>
+        <div class="password-wrap">
+            <input type="password" id="password" name="password" required>
+            <span class="toggle-eye" onclick="togglePassword()">👁</span>
+        </div><br><br>
+
+        <!-- 체크박스 -->
+        <label>
+            <input type="checkbox" id="newsletter" name="newsletter">
+            뉴스레터 구독
+        </label><br><br>
+
+        <!-- 성별 (하나만 선택) -->
+        <label>성별:</label><br>
+        <input type="radio" id="male" name="gender" value="male" required>
+        <label for="male">남성</label>
+
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">여성</label>
+        <br><br>
+
+        <!-- 관심사 (여러 개 선택) -->
+        <label>관심사:</label><br>
+
+        <input type="checkbox" id="sports" name="interest" value="sports">
+        <label for="sports">스포츠</label><br>
+
+        <input type="checkbox" id="music" name="interest" value="music">
+        <label for="music">음악</label><br>
+
+        <input type="checkbox" id="art" name="interest" value="art">
+        <label for="art">예술</label><br>
+
+        <input type="checkbox" id="tech" name="interest" value="tech">
+        <label for="tech">기술</label><br>
+
+        <input type="checkbox" id="travel" name="interest" value="travel">
+        <label for="travel">여행</label>
+        <br><br>
+
+        <h2>좋아하는 과일을 선택하세요</h2>
+        <select id="fruitSelect">
+            <option value="">-- 과일 선택 --</option>
+            <option value="사과">사과</option>
+            <option value="바나나">바나나</option>
+            <option value="포도">포도</option>
+            <option value="오렌지">오렌지</option>
+        </select>
+
+
+
+        <button type="submit">제출</button>
+    </form>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const eye = document.querySelector(".toggle-eye");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eye.textContent = "🙈";
+            } else {
+                passwordInput.type = "password";
+                eye.textContent = "👁";
+            }
+        }
+    </script>
+</body>
+
+</html>

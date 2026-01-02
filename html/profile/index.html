@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>홍왕기 자기소개</title>
+
+    <style>
+        :root {
+            --navy: #2f4f86;
+            --navy2: #24406f;
+            --sky: #f6f8ff;
+            --ink: #0f172a;
+            --muted: #475569;
+            --shadow: 0 16px 44px rgba(2, 6, 23, .35);
+            --shadow2: 0 10px 22px rgba(2, 6, 23, .10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR",
+                "Apple SD Gothic Neo", "Segoe UI", Roboto, Arial, sans-serif;
+            background:
+                radial-gradient(900px 520px at 20% 10%, rgba(99, 102, 241, .18), transparent 55%),
+                radial-gradient(900px 520px at 80% 0%, rgba(59, 130, 246, .18), transparent 55%),
+                linear-gradient(180deg, #0b1220, #0b1220);
+            padding: 34px 14px;
+            color: var(--ink);
+        }
+
+        .slide {
+            max-width: 1040px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, .9);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .frame {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+        }
+
+        .side {
+            background: linear-gradient(180deg, var(--navy), var(--navy2));
+            position: relative;
+        }
+
+        .name-vertical {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: .8px;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #ffffff, var(--sky));
+        }
+
+        .topbar {
+            background: linear-gradient(90deg, var(--navy2), var(--navy));
+            padding: 22px;
+        }
+
+        .topgrid {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .title {
+            margin: 0;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, .85);
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .photo-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 10px;
+            box-shadow: var(--shadow2);
+        }
+
+        .photo {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .body {
+            padding: 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .col {
+            display: grid;
+            gap: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .h {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--navy2);
+            margin-bottom: 10px;
+        }
+
+        .p {
+            font-size: 13px;
+            line-height: 1.85;
+            font-weight: 500;
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 9px;
+        }
+
+        .item {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            background: #3b82f6;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .kv {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .kv b {
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        a {
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            padding: 14px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            border-top: 1px solid #e5e7eb;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 920px) {
+            .frame {
+                grid-template-columns: 1fr;
+            }
+
+            .side {
+                display: none;
+            }
+
+            .topgrid {
+                grid-template-columns: 1fr;
+            }
+
+            .body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide">
+        <div class="frame">
+            <aside class="side">
+                <div class="name-vertical">Hong Wangki</div>
+            </aside>
+
+            <section class="main">
+                <header class="topbar">
+                    <div class="topgrid">
+                        <div>
+                            <h1 class="title">자기소개</h1>
+                            <p class="subtitle">
+                                홍왕기 · 01년생 · Java / Spring Boot<br />
+                                광운대학교 컴퓨터정보공학부 졸업 예정
+                            </p>
+                        </div>
+
+                        <div class="photo-card">
+                            <div class="photo">
+                                <img src="https://i.ibb.co/vxy5Sbbv/2.jpg" alt="프로필 이미지">
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="body">
+                    <!-- LEFT -->
+                    <div class="col">
+                        <section class="card">
+                            <div class="h">PROFILE</div>
+                            <p class="p">
+                                안녕하세요. 홍왕기입니다.<br />
+                                Java와 Spring 기반의 백엔드 개발에 관심을 가지고 학습과 프로젝트를 진행하고 있습니다.<br />
+                                앞으로 <b>6개월 잘 부탁드립니다.</b>
+                            </p>
+                        </section>
+
+                        <section class="card">
+                            <div class="h">CONTACT</div>
+                            <ul class="list">
+                                <li class="item">
+                                    <span class="dot"></span>
+                                    <div class="kv">
+                                        <b>GitHub</b><br />
+                                        <a href="https://github.com/hongwangki" target="_blank">
+                                            https://github.com/hongwangki
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="item">
+                                    <span class="dot"></span>
+                                    <div class="kv">
+                                        <b>Blog</b><br />
+                                        <a href="https://leejd8130.tistory.com/" target="_blank">
+                                            https://leejd8130.tistory.com/
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="card">
+                            <div class="h">INTERESTS</div>
+                            <ul class="list">
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv">게임</div>
+                                </li>
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv">축구</div>
+                                </li>
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv">배드민턴</div>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col">
+                        <section class="card">
+                            <div class="h">SKILLS</div>
+                            <ul class="list">
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv"><b>Java</b> · Spring Boot</div>
+                                </li>
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv"><b>REST API</b> 설계 / 구현</div>
+                                </li>
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv"><b>SQL</b> 기반 데이터 처리</div>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="card">
+                            <div class="h">CERTIFICATIONS</div>
+                            <ul class="list">
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv"><b>정보처리기사</b> · 보유</div>
+                                </li>
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv"><b>SQLD</b> · 보유</div>
+                                </li>
+                                <li class="item"><span class="dot"></span>
+                                    <div class="kv"><b>워드프로세서</b> · 보유</div>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="card">
+                            <div class="h">EDUCATION</div>
+                            <p class="p">
+                                광운대학교 컴퓨터정보공학부<br />
+                                <span class="kv">졸업 예정</span>
+                            </p>
+                        </section>
+                    </div>
+                </main>
+
+                <footer class="footer">
+                    다 같이 열심히 해서 얻어가는 게 많았으면 좋겠습니다.
+                </footer>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>

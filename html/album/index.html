@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>음악 재생 + 반응형 강아지 갤러리</title>
+
+    <style>
+        :root {
+            --border: #e6e8ee;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --bg: #ffffff;
+            --shadow: 0 12px 28px rgba(0, 0, 0, .10);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, "Noto Sans KR", sans-serif;
+            background: #f6f9ff;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        /* 레이아웃: 큰 화면(2열) / 작은 화면(1열) */
+        .wrap {
+            width: min(980px, 100%);
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 14px;
+            align-items: start;
+        }
+
+        @media (max-width:860px) {
+            .wrap {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* 왼쪽: 음악 */
+        .music {
+            padding: 16px;
+        }
+
+        .music h1 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.2px;
+        }
+
+        .music p {
+            margin: 0 0 12px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        button {
+            flex: 1;
+            min-width: 110px;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            background: #5b7cff;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        button.secondary {
+            background: #111827;
+        }
+
+        button.ghost {
+            background: #eef2ff;
+            color: #3047c2;
+            border: 1px solid #dfe6ff;
+        }
+
+        button:active {
+            transform: scale(.98);
+        }
+
+        .row {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .row label {
+            font-size: 12px;
+            font-weight: 900;
+            color: #374151;
+            width: 52px;
+            text-align: left;
+        }
+
+        .row input[type="range"] {
+            width: 100%;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+            background: #f9fafb;
+            border: 1px solid #eef0f4;
+            border-radius: 12px;
+            padding: 10px 12px;
+            line-height: 1.45;
+        }
+
+        /* 오른쪽: 갤러리 */
+        .gallery {
+            padding: 16px;
+        }
+
+        .gallery h2 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        /* 큰 화면: 3열 / 작은 화면: 1열 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width:860px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .img-box {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            background: #eef2ff;
+            aspect-ratio: 1 / 1;
+            position: relative;
+        }
+
+        .tag {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .85);
+            border: 1px solid rgba(230, 232, 238, .9);
+            font-size: 12px;
+            font-weight: 900;
+            color: #111827;
+            z-index: 2;
+        }
+
+        /* picture 안에서 img 스타일 */
+        picture,
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        img {
+            object-fit: cover;
+        }
+
+        .note {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <!-- 음악 재생 카드 -->
+        <section class="card music">
+            <h1>🎵 음악 재생</h1>
+            <p>경로: <code>media/music.mp3</code></p>
+
+            <div class="btns">
+                <button id="playBtn" type="button">▶ 재생</button>
+                <button id="pauseBtn" class="ghost" type="button">⏸ 일시정지</button>
+                <button id="stopBtn" class="secondary" type="button">⏹ 정지</button>
+            </div>
+
+            <div class="row">
+                <label for="vol">볼륨</label>
+                <input id="vol" type="range" min="0" max="1" step="0.01" value="0.5" />
+            </div>
+
+            <div class="status" id="status">준비됨</div>
+
+            <audio id="bgm" src="media/music.mp3" preload="auto"></audio>
+        </section>
+
+        <!-- 강아지 갤러리 카드 -->
+        <section class="card gallery">
+            <h2>🐶 강아지 사진 (반응형: picture/source)</h2>
+
+            <div class="grid">
+                <!-- dog1 -->
+                <div class="img-box">
+                    <span class="tag">dog1</span>
+
+                    <!-- ✅ 작은 화면/큰 화면마다 다른 이미지를 로드 -->
+                    <picture>
+                        <!-- 작은 화면(최대 860px)일 때: dog1-small.jpeg -->
+                        <source media="(max-width: 860px)" srcset="media/dog1.jpeg">
+                        <!-- 큰 화면일 때: dog1.jpeg -->
+                        <source media="(min-width: 861px)" srcset="media/dog1.jpeg">
+                        <!-- fallback -->
+                        <img src="media/dog1.jpeg" alt="dog1">
+                    </picture>
+                </div>
+
+                <!-- dog2 -->
+                <div class="img-box">
+                    <span class="tag">dog2</span>
+                    <picture>
+                        <source media="(max-width: 860px)" srcset="media/dog2.jpeg">
+                        <source media="(min-width: 861px)" srcset="media/dog2.jpeg">
+                        <img src="media/dog2.jpeg" alt="dog2">
+                    </picture>
+                </div>
+
+                <!-- dog3 -->
+                <div class="img-box">
+                    <span class="tag">dog3</span>
+                    <picture>
+                        <source media="(max-width: 860px)" srcset="media/dog3.jpeg">
+                        <source media="(min-width: 861px)" srcset="media/dog3.jpeg">
+                        <img src="media/dog3.jpeg" alt="dog3">
+                    </picture>
+                </div>
+            </div>
+
+            <p class="note">
+                ✅ <b>중요:</b> 위 코드는 “작은 화면용 파일”을 따로 둔 예시야.<br>
+                작은 화면용 이미지가 없다면 아래처럼 바꿔도 돼:
+                <br><code>&lt;source media="(max-width: 860px)" srcset="media/dog1.jpeg"&gt;</code>
+            </p>
+        </section>
+    </div>
+
+    <script>
+        const bgm = document.getElementById("bgm");
+        const statusEl = document.getElementById("status");
+        const vol = document.getElementById("vol");
+
+        document.getElementById("playBtn").addEventListener("click", async () => {
+            try {
+                await bgm.play();
+                statusEl.textContent = "재생 중";
+            } catch (e) {
+                statusEl.textContent = "재생 실패: Live Server로 실행했는지 확인, mp3 경로 확인";
+            }
+        });
+
+        document.getElementById("pauseBtn").addEventListener("click", () => {
+            bgm.pause();
+            statusEl.textContent = "일시정지됨";
+        });
+
+        document.getElementById("stopBtn").addEventListener("click", () => {
+            bgm.pause();
+            bgm.currentTime = 0;
+            statusEl.textContent = "정지됨 (처음으로)";
+        });
+
+        bgm.volume = Number(vol.value);
+        vol.addEventListener("input", () => {
+            bgm.volume = Number(vol.value);
+            statusEl.textContent = `볼륨: ${Math.round(bgm.volume * 100)}%`;
+        });
+    </script>
+</body>
+
+</html>

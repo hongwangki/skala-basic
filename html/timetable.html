@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>주간 강의 시간표</title>
+
+    <style>
+        :root {
+            --border: #e6e8ee;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --bg: #ffffff;
+            --head: #ffffff;
+            --time: #ffffff;
+            --shadow: 0 10px 26px rgba(0, 0, 0, .06);
+            --radius: 16px;
+
+            /* 슬롯 높이(1시간당) */
+            --slot: 72px;
+
+            /* 점심 행 높이(점심시간은 가독성 위해 더 크게) */
+            --lunch: 86px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", Arial, sans-serif;
+            color: var(--text);
+            background: #ffffff;
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 14px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -.2px;
+            margin: 0;
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 0 0 4px;
+        }
+
+        .table-box {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--bg);
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            min-width: 920px;
+        }
+
+        thead th {
+            background: var(--head);
+            padding: 14px 8px;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody th.time {
+            width: 130px;
+            background: var(--time);
+            font-weight: 900;
+            text-align: center;
+            padding: 12px 8px;
+            font-size: 12px;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            color: #111827;
+        }
+
+        td {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            vertical-align: top;
+            padding: 0;
+        }
+
+        tr:last-child td,
+        tr:last-child th {
+            border-bottom: 0;
+        }
+
+        td:last-child {
+            border-right: 0;
+        }
+
+        /* 1시간 슬롯 */
+        .cell {
+            min-height: var(--slot);
+            padding: 10px;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        /* 빈칸 */
+        .empty {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            border: 1px dashed #e9edf5;
+            background: linear-gradient(180deg, #ffffff, #fbfcff);
+        }
+
+        /* 강의 블록 */
+        .event {
+            width: 100%;
+            border-radius: 12px;
+            padding: 12px 12px;
+            box-shadow: 0 10px 18px rgba(0, 0, 0, .06);
+            border: 1px solid rgba(255, 255, 255, .65);
+
+            white-space: normal;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+            overflow: visible;
+
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .event .name {
+            font-weight: 900;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .event .meta {
+            font-weight: 900;
+            font-size: 12px;
+            opacity: .9;
+        }
+
+        /* ✅ 점심시간(모든 요일 열 합치기) - "짤림" 방지용 높이 확보 */
+        .lunch-cell {
+            height: var(--lunch);
+            padding: 10px;
+        }
+
+        .lunch {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+
+            font-weight: 900;
+            color: #2f43a8;
+            background: linear-gradient(90deg, #eef2ff, #f6fbff);
+            border: 1px solid #dfe6ff;
+        }
+
+        .lunch .main {
+            font-size: 14px;
+            letter-spacing: .2px;
+        }
+
+        .lunch .sub {
+            margin: 0;
+            font-size: 12px;
+            color: #3b4fb6;
+            font-weight: 800;
+            opacity: .95;
+        }
+
+        /* 색상 */
+        .c-purple {
+            background: #d9b2ff;
+        }
+
+        .c-lav {
+            background: #c7b6ff;
+        }
+
+        .c-green {
+            background: #a9d7c0;
+        }
+
+        .c-mustard {
+            background: #e7cf86;
+        }
+
+        .c-teal {
+            background: #a9d9d2;
+        }
+
+        .c-sky {
+            background: #a8c7ff;
+        }
+
+        .c-sand {
+            background: #e5b59f;
+        }
+
+        @media (max-width:560px) {
+            :root {
+                --slot: 64px;
+                --lunch: 76px;
+            }
+
+            .wrap {
+                padding: 0 10px;
+            }
+
+            tbody th.time {
+                width: 104px;
+                font-size: 11px;
+            }
+
+            .cell {
+                padding: 8px;
+            }
+
+            .event {
+                padding: 10px;
+            }
+
+            .event .name {
+                font-size: 12px;
+            }
+
+            .event .meta {
+                font-size: 11px;
+            }
+
+            .lunch .main {
+                font-size: 13px;
+            }
+
+            .lunch .sub {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <div>
+                <p class="sub">2025.12.30 기준</p>
+                <h1 class="title">일주일 강의 시간표</h1>
+            </div>
+        </div>
+
+        <div class="table-box">
+            <table id="timetable" aria-label="주간 강의 시간표"></table>
+        </div>
+    </div>
+
+    <script>
+        /*
+          요구사항(화면 출력 X / 코드로 반영)
+          1) 2시간 이상 강의는 행 합치기(rowspan)
+          2) 점심시간은 모든 요일 열 합치기(colspan)
+        */
+
+        const DAYS = ["월", "화", "수", "목", "금", "토"];
+
+        // 09:00 ~ 19:00
+        const START_HOUR = 9;
+        const END_HOUR = 19;
+
+        // 점심시간: 12:00~13:00
+        const LUNCH_START = 12;
+        const LUNCH_END = 13;
+
+        // 예시 강의
+        const EVENTS = [
+            { day: "수", start: 11, end: 13, title: "인공지능", room: "새빛102", prof: "최상호", color: "c-lav" },
+            { day: "목", start: 9, end: 12, title: "고급C프로그래밍", room: "새빛303", prof: "이우신", color: "c-purple" },
+            { day: "목", start: 13, end: 14, title: "운영체제", room: "새빛203", prof: "최상호", color: "c-green" },
+            { day: "목", start: 14, end: 15, title: "알고리즘", room: "새빛203", prof: "신동화", color: "c-mustard" },
+            { day: "금", start: 13, end: 16, title: "과학철학의이해", room: "비405", prof: "우호용", color: "c-teal" },
+            { day: "화", start: 15, end: 17, title: "경력개발과취업전략", room: "새빛203", prof: "최상호", color: "c-sky" },
+            { day: "토", start: 18, end: 19, title: "광운인되기", room: "미지정", prof: "김정권", color: "c-sand" }
+        ];
+
+        const pad2 = (n) => String(n).padStart(2, "0");
+        const slotLabel = (h) => `${pad2(h)}:00  ~  ${pad2(h + 1)}:00`;
+        const rangeLabel = (s, e) => `${pad2(s)}:00  ~  ${pad2(e)}:00`;
+        const lunchRangeLabel = () => `${pad2(LUNCH_START)}:00  ~  ${pad2(LUNCH_END)}:00`;
+
+        // day -> events
+        const eventsByDay = Object.fromEntries(DAYS.map(d => [d, []]));
+        for (const ev of EVENTS) if (eventsByDay[ev.day]) eventsByDay[ev.day].push(ev);
+        for (const d of DAYS) eventsByDay[d].sort((a, b) => a.start - b.start);
+
+        function findEventStarting(day, hour) {
+            return (eventsByDay[day] || []).find(ev => ev.start === hour) || null;
+        }
+        function isCoveredByRowspan(day, hour, spanMap) {
+            return !!(spanMap[day] && spanMap[day][hour]);
+        }
+
+        const table = document.getElementById("timetable");
+
+        // THEAD
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+
+        const thTime = document.createElement("th");
+        thTime.textContent = "시간";
+        headRow.appendChild(thTime);
+
+        for (const d of DAYS) {
+            const th = document.createElement("th");
+            th.textContent = d;
+            headRow.appendChild(th);
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        // TBODY
+        const tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+
+        // rowspan으로 덮인 슬롯 기록
+        const spanMap = Object.fromEntries(DAYS.map(d => [d, {}]));
+
+        for (let hour = START_HOUR; hour < END_HOUR; hour++) {
+
+            // ✅ 점심시간(열 합치기)
+            if (hour === LUNCH_START) {
+                const trLunch = document.createElement("tr");
+
+                const timeTh = document.createElement("th");
+                timeTh.className = "time";
+                timeTh.textContent = slotLabel(LUNCH_START);
+                trLunch.appendChild(timeTh);
+
+                const td = document.createElement("td");
+                td.colSpan = DAYS.length; // colspan
+                td.className = "lunch-cell";
+
+                const lunchBox = document.createElement("div");
+                lunchBox.className = "lunch";
+
+                const main = document.createElement("div");
+                main.className = "main";
+                main.textContent = "점심시간";
+
+                const sub = document.createElement("p");
+                sub.className = "sub";
+                sub.textContent = lunchRangeLabel();
+
+                lunchBox.appendChild(main);
+                lunchBox.appendChild(sub);
+                td.appendChild(lunchBox);
+
+                trLunch.appendChild(td);
+                tbody.appendChild(trLunch);
+                continue;
+            }
+            if (hour > LUNCH_START && hour < LUNCH_END) continue;
+
+            const tr = document.createElement("tr");
+
+            // 시간 라벨
+            const timeTh = document.createElement("th");
+            timeTh.className = "time";
+            timeTh.textContent = slotLabel(hour);
+            tr.appendChild(timeTh);
+
+            // 요일 칸
+            for (const day of DAYS) {
+
+                if (isCoveredByRowspan(day, hour, spanMap)) continue;
+
+                const ev = findEventStarting(day, hour);
+
+                if (ev) {
+                    const duration = ev.end - ev.start;
+
+                    const td = document.createElement("td");
+
+                    // ✅ 2시간 이상이면 rowspan
+                    if (duration >= 2) {
+                        td.rowSpan = duration;
+                        for (let h = hour + 1; h < ev.end; h++) {
+                            spanMap[day][h] = true;
+                        }
+                    }
+
+                    const cell = document.createElement("div");
+                    cell.className = "cell";
+
+                    const box = document.createElement("div");
+                    box.className = `event ${ev.color || ""}`;
+
+                    const name = document.createElement("div");
+                    name.className = "name";
+                    name.textContent = `${ev.title} (${ev.room} / ${ev.prof})`;
+
+                    const meta = document.createElement("div");
+                    meta.className = "meta";
+                    meta.textContent = rangeLabel(ev.start, ev.end);
+
+                    box.appendChild(name);
+                    box.appendChild(meta);
+                    cell.appendChild(box);
+
+                    td.appendChild(cell);
+                    tr.appendChild(td);
+
+                } else {
+                    const td = document.createElement("td");
+                    const cell = document.createElement("div");
+                    cell.className = "cell";
+                    const empty = document.createElement("div");
+                    empty.className = "empty";
+                    cell.appendChild(empty);
+                    td.appendChild(cell);
+                    tr.appendChild(td);
+                }
+            }
+
+            tbody.appendChild(tr);
+        }
+    </script>
+</body>
+
+</html>
